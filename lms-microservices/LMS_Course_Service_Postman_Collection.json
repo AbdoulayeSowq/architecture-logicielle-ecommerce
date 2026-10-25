@@ -1,0 +1,1307 @@
+{
+  "info": {
+    "_postman_id": "course-service-collection",
+    "name": "LMS Course Service",
+    "description": "Collection complète pour tester tous les endpoints du Course Service. Nécessite un token d'authentification.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "1. Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('admin_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin@lms.sn\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Login (Lecturer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('lecturer_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"aaciss@ept.sn\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3. Login (Student)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('student_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"dmedoune@ept.sn\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Séances",
+      "item": [
+        {
+          "name": "1. Get All Séances",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Séance by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Séances by Module",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/session/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "session", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "4. Create Séance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Username",
+                "value": "aaciss"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/1/session",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "1", "session"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionDate\": \"2026-04-15T08:00:00\",\n  \"ordre\": 1,\n  \"duree\": 90,\n  \"typeSeance\": \"CM\",\n  \"objectifs\": \"Introduction à l'administration système Linux\",\n  \"contenu\": \"Présentation des commandes de base, gestion des fichiers et permissions, gestion des processus\"\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Update Séance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Username",
+                "value": "aaciss"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/session/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "session", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionDate\": \"2026-04-15T10:00:00\",\n  \"duree\": 120,\n  \"objectifs\": \"Administration système avancée\",\n  \"contenu\": \"Configuration réseau, gestion des utilisateurs, scripts shell\"\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Delete Séance",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "X-User-Username",
+                "value": "aaciss"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/session/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "session", "1"]
+            }
+          }
+        },
+        {
+          "name": "7. Get Courses by Department",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/department/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "department", "1"]
+            }
+          }
+        },
+        {
+          "name": "8. Assign Course to Module",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/assign/course/1/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "assign", "course", "1", "module", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teaching Units (UE)",
+      "item": [
+        {
+          "name": "1. Get All Teaching Units",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Teaching Unit by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Teaching Unit by Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit/code/DEV1501",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit", "code", "DEV1501"]
+            }
+          }
+        },
+        {
+          "name": "4. Get Teaching Units by Semester",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit/semester/S5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit", "semester", "S5"]
+            }
+          }
+        },
+        {
+          "name": "5. Create Teaching Unit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Développement I\",\n  \"code\": \"DEV1501\",\n  \"description\": \"Unité d'enseignement développement logiciel\",\n  \"semester\": \"S5\",\n  \"creditsUE\": 4,\n  \"classId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Update Teaching Unit",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Développement I - Updated\",\n  \"creditsUE\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "7. Delete Teaching Unit",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/teaching-unit/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "teaching-unit", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modules (EC)",
+      "item": [
+        {
+          "name": "1. Get All Modules",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Module by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Module by Code EC",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/code/DEV15011",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "code", "DEV15011"]
+            }
+          }
+        },
+        {
+          "name": "4. Get Modules by Teaching Unit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/teaching-unit/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "teaching-unit", "1"]
+            }
+          }
+        },
+        {
+          "name": "5. Get Modules by Lecturer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/lecturer/aaciss",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "lecturer", "aaciss"]
+            }
+          }
+        },
+        {
+          "name": "6. Get Modules by Semester",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/semester/S5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "semester", "S5"]
+            }
+          }
+        },
+        {
+          "name": "7. Get Modules by Level",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/level/DIC1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "level", "DIC1"]
+            }
+          }
+        },
+        {
+          "name": "8. Create Module (Full Academic)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codeEC\": \"DEV15011\",\n  \"name\": \"Administration Systèmes\",\n  \"description\": \"Gestion et administration des systèmes informatiques\",\n  \"cmHours\": 12,\n  \"tdHours\": 8,\n  \"tpHours\": 8,\n  \"tpeHours\": 12,\n  \"creditsEC\": 2,\n  \"semester\": \"S5\",\n  \"level\": \"DIC1\",\n  \"teachingUnit\": {\n    \"id\": 1\n  },\n  \"lecturerUsername\": \"aaciss\"\n}"
+            }
+          }
+        },
+        {
+          "name": "9. Update Module",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Administration Systèmes - Updated\",\n  \"cmHours\": 14,\n  \"tdHours\": 10,\n  \"creditsEC\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "10. Delete Module",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "module", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Materials",
+      "item": [
+        {
+          "name": "1. Get Materials by Course (Séance)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/material/course/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "material", "course", "1"]
+            }
+          }
+        },
+        {
+          "name": "2. Create Material",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/material",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "material"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Support de cours - Administration Système Linux\",\n  \"description\": \"Introduction aux commandes Linux et gestion des fichiers\",\n  \"type\": \"PDF\",\n  \"fileUrl\": \"https://example.com/linux-admin-cm1.pdf\",\n  \"courseId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "3. Delete Material",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/material/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "material", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Grades",
+      "item": [
+        {
+          "name": "1. Get Grades by Student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/grade/student/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "grade", "student", "1"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Grades by Module",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/grade/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "grade", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Save Grade",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/grade",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "grade"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"moduleId\": 1,\n  \"score\": 14.5,\n  \"comments\": \"Bon travail\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quiz",
+      "item": [
+        {
+          "name": "1. Get Quizzes by Module",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Quiz by ID (Prof - avec r\u00e9ponses)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Take Quiz (\u00c9tudiant - sans r\u00e9ponses)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/1/take",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "1", "take"]
+            }
+          }
+        },
+        {
+          "name": "4. Create Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Administration Syst\u00e8mes\",\n  \"description\": \"Quiz sur les commandes Linux\",\n  \"moduleId\": 2,\n  \"typeQuiz\": \"QCM\",\n  \"timeLimit\": 30,\n  \"timeLimitPerQuestion\": false,\n  \"documentMode\": \"NO_DOCS\",\n  \"cameraSurveillanceEnabled\": false,\n  \"randomizeQuestions\": true,\n  \"randomizeAnswers\": true,\n  \"maxAttempts\": 2,\n  \"passingScore\": 50.0,\n  \"isDraft\": false,\n  \"questions\": [\n    {\n      \"text\": \"Quelle commande liste les fichiers ?\",\n      \"type\": \"SINGLE_CHOICE\",\n      \"points\": 5,\n      \"orderIndex\": 1,\n      \"justification\": \"La commande ls (list) affiche le contenu d'un r\u00e9pertoire.\",\n      \"options\": [\n        {\"text\": \"ls\", \"correct\": true},\n        {\"text\": \"cd\", \"correct\": false},\n        {\"text\": \"rm\", \"correct\": false},\n        {\"text\": \"mv\", \"correct\": false}\n      ]\n    },\n    {\n      \"text\": \"Linux est un syst\u00e8me d'exploitation open source.\",\n      \"type\": \"TRUE_FALSE\",\n      \"points\": 3,\n      \"orderIndex\": 2,\n      \"justification\": \"Linux est distribu\u00e9 sous licence GPL, c'est un logiciel libre et open source.\",\n      \"options\": [\n        {\"text\": \"Vrai\", \"correct\": true},\n        {\"text\": \"Faux\", \"correct\": false}\n      ]\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "5a. Update Quiz (m\u00e9tadonn\u00e9es uniquement)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Administration Syst\u00e8mes - V2\",\n  \"typeQuiz\": \"MIXTE\",\n  \"timeLimit\": 45,\n  \"maxAttempts\": 3,\n  \"passingScore\": 60.0\n}"
+            }
+          }
+        },
+        {
+          "name": "5b. Update Quiz (avec questions - \u00e9choue si soumissions existent)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Administration Syst\u00e8mes - V2\",\n  \"typeQuiz\": \"MIXTE\",\n  \"timeLimit\": 45,\n  \"maxAttempts\": 3,\n  \"passingScore\": 60.0,\n  \"questions\": [\n    {\n      \"text\": \"Quelle commande cr\u00e9e un r\u00e9pertoire ?\",\n      \"type\": \"SINGLE_CHOICE\",\n      \"points\": 5,\n      \"orderIndex\": 1,\n      \"justification\": \"mkdir (make directory) cr\u00e9e un nouveau r\u00e9pertoire.\",\n      \"options\": [\n        {\"text\": \"mkdir\", \"correct\": true},\n        {\"text\": \"touch\", \"correct\": false},\n        {\"text\": \"cat\", \"correct\": false}\n      ]\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Submit Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/submit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "submit"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quizId\": 1,\n  \"studentId\": \"1\",\n  \"answers\": [\n    {\"questionId\": 1, \"selectedOptionId\": 1},\n    {\"questionId\": 2, \"selectedOptionId\": 5}\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "7. Get Quiz Results by Student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/result/student/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "result", "student", "1"]
+            }
+          }
+        },
+        {
+          "name": "8. Get Quiz Results by Quiz",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/result/quiz/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "result", "quiz", "1"]
+            }
+          }
+        },
+        {
+          "name": "9. Delete Quiz",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/quiz/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "quiz", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forum",
+      "item": [
+        {
+          "name": "1. Get All Forum Threads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/threads",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "threads"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Forum Threads by Module",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Forum Thread by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Forum Thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moduleId\": 2,\n  \"authorId\": \"1\",\n  \"authorName\": \"Student\",\n  \"title\": \"Question sur Spring Boot\",\n  \"content\": \"Comment configurer une datasource ?\",\n  \"tag\": \"QUESTION\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3b. Update Forum Thread",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Question sur Spring Boot - V2\",\n  \"tag\": \"DISCUSSION\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3c. Delete Forum Thread",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1"]
+            }
+          }
+        },
+        {
+          "name": "4. Create Forum Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/post",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "post"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"threadId\": 1,\n  \"authorId\": \"1\",\n  \"authorName\": \"Student\",\n  \"content\": \"Vous pouvez utiliser application.properties\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4b. Update Forum Post",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/post/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "post", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "\"Contenu modifié avec application.yml\""
+            }
+          }
+        },
+        {
+          "name": "4c. Delete Forum Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/post/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "post", "1"]
+            }
+          }
+        },
+        {
+          "name": "5. Upvote Thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1/upvote/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1", "upvote", "1"]
+            }
+          }
+        },
+        {
+          "name": "6. Remove Upvote Thread",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1/upvote/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1", "upvote", "1"]
+            }
+          }
+        },
+        {
+          "name": "7. Upvote Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/post/1/upvote/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "post", "1", "upvote", "1"]
+            }
+          }
+        },
+        {
+          "name": "8. Remove Upvote Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/post/1/upvote/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "post", "1", "upvote", "1"]
+            }
+          }
+        },
+        {
+          "name": "9. Mark Post as Solution",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/forum/thread/1/solution/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "forum", "thread", "1", "solution", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Course & Adaptive",
+      "item": [
+        {
+          "name": "1. My Modules (Student)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/studentcourse/student/dmedoune/modules",
+              "host": ["{{base_url}}"],
+              "path": ["api", "studentcourse", "student", "dmedoune", "modules"]
+            }
+          }
+        },
+        {
+          "name": "2. Module Sessions (Student)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/studentcourse/course/module/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "studentcourse", "course", "module", "1"]
+            }
+          }
+        },
+        {
+          "name": "3. Adaptive Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/course/adaptive/recommendations/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "course", "adaptive", "recommendations", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lecturer_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "student_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+# ============================================================
+# CONFIG — practice-service (Exercices de code, Piston)
+# ============================================================
+
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: ${PRACTICE_DB_URL:jdbc:postgresql://postgres_db:5432/practice_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1234}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+    consumer:
+      group-id: practice-service
+
+piston:
+  base-url: ${PISTON_BASE_URL:http://piston:2000}
+
+# Langages supportés : top 5
+# python, java, javascript, c, c++
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env,configprops
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.lms.practice: DEBUG

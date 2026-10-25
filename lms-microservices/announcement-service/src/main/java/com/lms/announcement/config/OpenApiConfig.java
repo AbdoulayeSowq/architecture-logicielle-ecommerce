@@ -1,0 +1,30 @@
+package com.lms.announcement.config;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI announcementServiceOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Announcement Service API")
+                        .description("Microservice de gestion des annonces (devoirs, événements, examens, maintenance) et des notifications utilisateur.")
+                        .version("1.0.0")
+                        .contact(new Contact()
+                                .name("EPT LMS Team")
+                                .email("admin@ept.sn")))
+                .servers(List.of(
+                        new Server().url("http://localhost:8086").description("Serveur local (direct)"),
+                        new Server().url("http://localhost:8080").description("Via API Gateway")
+                ));
+    }
+}

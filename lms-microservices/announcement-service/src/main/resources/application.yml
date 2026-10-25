@@ -1,0 +1,17 @@
+# announcement-service — Configuration minimale locale
+# Config centralisée dans config-repo/announcement-service.yml
+
+spring:
+  application:
+    name: announcement-service
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+# --- Fallback local ---
+server:
+  port: 8086
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

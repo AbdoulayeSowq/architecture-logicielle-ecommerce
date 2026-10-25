@@ -1,0 +1,30 @@
+# ============================================================
+# CONFIG — meeting-service (Réunions vidéo LiveKit)
+# ============================================================
+
+server:
+  port: 8087
+
+spring:
+  datasource:
+    url: ${MEETING_DB_URL:jdbc:postgresql://localhost:5432/meeting_db}
+    username: ${DB_USERNAME:macbookpro}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  security:
+    user:
+      name: admin
+      password: ${MEETING_ADMIN_PASSWORD:admin}
+    basic:
+      enabled: false
+
+livekit:
+  api:
+    key: ${LIVEKIT_API_KEY:devkey}
+    secret: ${LIVEKIT_API_SECRET:devsecret123456789012345678901234567890}
+  server:
+    url: ${LIVEKIT_SERVER_URL:ws://localhost:7880}

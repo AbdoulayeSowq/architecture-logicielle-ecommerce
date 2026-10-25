@@ -1,0 +1,190 @@
+# ============================================================
+# CONFIG — api-gateway (Routing, CORS, Sécurité JWT)
+# ============================================================
+
+server:
+  port: 8080
+
+# Doit être identique à user-service (JwtService) — sinon 401 sur toutes les requêtes authentifiées.
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/auth/realms/lms/protocol/openid-connect/certs
+  codec:
+    max-in-memory-size: 50MB
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+      default-filters:
+        - AuthenticationFilter
+        - name: SetResponseHeader
+          args:
+            name: X-Frame-Options
+            value: ALLOWALL
+          predicates:
+            - Path=/api/**
+
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**
+
+        - id: university-service
+          uri: lb://university-service
+          predicates:
+            - Path=/api/uni/**
+
+        - id: university-service-public
+          uri: lb://university-service
+          predicates:
+            - Path=/api/public/uni/**
+            - Method=GET
+
+        - id: course-service
+          uri: lb://course-service
+          predicates:
+            - Path=/api/course/**
+
+        - id: order-service
+          uri: lb://course-service
+          predicates:
+            - Path=/api/orders/**
+
+        - id: course-service-student
+          uri: lb://course-service
+          predicates:
+            - Path=/api/studentcourse/**
+
+        - id: course-service-public
+          uri: lb://course-service
+          predicates:
+            - Path=/api/public/courses/**
+            - Method=GET
+
+        - id: announcement-service
+          uri: lb://announcement-service
+          predicates:
+            - Path=/api/announcement/**
+
+        - id: announcement-ws
+          uri: lb://announcement-service
+          predicates:
+            - Path=/ws-announcement/**
+          filters:
+            - StripPrefix=0
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - id: announcement-ws-native
+          uri: lb://announcement-service
+          predicates:
+            - Path=/ws-stomp/**
+          filters:
+            - StripPrefix=0
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+          metadata:
+            connect-timeout: 60000
+            response-timeout: 600s
+
+        - id: ai-service
+          uri: lb://ai-service
+          predicates:
+            - Path=/api/ai/**
+
+        - id: meeting-service
+          uri: lb://meeting-service
+          predicates:
+            - Path=/api/meeting/**
+
+        - id: practice-service
+          uri: lb://practice-service
+          predicates:
+            - Path=/api/practice/**
+
+        # OpenAPI aggregation
+        - id: user-service-api-docs
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: course-service-api-docs
+          uri: lb://course-service
+          predicates:
+            - Path=/course-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: university-service-api-docs
+          uri: lb://university-service
+          predicates:
+            - Path=/university-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: announcement-service-api-docs
+          uri: lb://announcement-service
+          predicates:
+            - Path=/announcement-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: meeting-service-api-docs
+          uri: lb://meeting-service
+          predicates:
+            - Path=/meeting-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: practice-service-api-docs
+          uri: lb://practice-service
+          predicates:
+            - Path=/practice-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: "User Service"
+        url: /user-service/v3/api-docs
+        display-name: "User Service"
+      - name: "Course Service"
+        url: /course-service/v3/api-docs
+        display-name: "Course Service"
+      - name: "University Service"
+        url: /university-service/v3/api-docs
+        display-name: "University Service"
+      - name: "Announcement Service"
+        url: /announcement-service/v3/api-docs
+        display-name: "Announcement Service"
+      - name: "Meeting Service"
+        url: /meeting-service/v3/api-docs
+        display-name: "Meeting Service"
+      - name: "Practice Service"
+        url: /practice-service/v3/api-docs
+        display-name: "Practice Service"
+    disable-swagger-default-url: true
+    urls-primary-name: "User Service"
+  api-docs:
+    enabled: true

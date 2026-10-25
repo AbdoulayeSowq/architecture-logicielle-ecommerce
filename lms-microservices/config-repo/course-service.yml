@@ -1,0 +1,34 @@
+# ============================================================
+# CONFIG — course-service (Modules, Quiz, Forum, Materials)
+# ============================================================
+
+server:
+  port: 8083
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: ${COURSE_DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  jpa:
+    show-sql: false
+    open-in-view: false
+
+app:
+  base-url: ${BASE_URL:http://localhost:8080}
+
+# Stockage objet (vidéos, PDF, supports de cours) — S3-compatible via MinIO
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:admin}
+  secret-key: ${MINIO_SECRET_KEY}
+  bucket: ${MINIO_BUCKET:course-files}
+
+# Judge0 config removed — now handled by practice-service

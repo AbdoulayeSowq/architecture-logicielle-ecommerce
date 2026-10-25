@@ -1,0 +1,789 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "LMS Announcement Service",
+    "description": "Collection for testing Announcement Service endpoints including announcements, messages, and notifications.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "1. Login (Admin) — via User Service",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('admin_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin@lms.sn\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Annonces",
+      "item": [
+        {
+          "name": "1. List All Announcements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "all"]
+            }
+          }
+        },
+        {
+          "name": "2. Filter Announcements by Type",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/type/{{announcement_type}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "type", "{{announcement_type}}"]
+            }
+          }
+        },
+        {
+          "name": "2b. Filter by Audience (ALL/STUDENTS/LECTURERS/COURSE/CLASS)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/audience/{{target_audience}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "audience", "{{target_audience}}"]
+            }
+          }
+        },
+        {
+          "name": "2c. Get Announcements for a Course",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/course/{{target_course_code}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "course", "{{target_course_code}}"]
+            }
+          }
+        },
+        {
+          "name": "2d. Get Announcements for a Class (Standardized)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/class/DIC1-GIT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "class", "DIC1-GIT"]
+            }
+          }
+        },
+        {
+          "name": "2e. Get Announcements for Student (my course + my class)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/for/student?courseCode={{target_course_code}}&classId={{target_class_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "for", "student"],
+              "query": [
+                {"key": "courseCode", "value": "{{target_course_code}}"},
+                {"key": "classId", "value": "{{target_class_id}}"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "2f. Get Announcements for Lecturer",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/for/lecturer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "for", "lecturer"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Assignment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('assignment_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/assignment",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "assignment"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Java Programming Assignment\",\n  \"description\": \"Complete the Java programming exercises\",\n  \"type\": \"assignment\",\n  \"targetAudience\": \"COURSE\",\n  \"targetId\": \"CS101\",\n  \"assignmentCourseCode\": \"CS101\",\n  \"assignmentDueDate\": \"2026-12-31\",\n  \"assignmentInstructions\": \"Submit your code via the portal\",\n  \"assignmentInstructor\": \"Dr. Smith\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Update Assignment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/assignment/{{assignment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "assignment", "{{assignment_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Java Programming Assignment (Updated)\",\n  \"description\": \"Complete the Java programming exercises - extended deadline\",\n  \"type\": \"assignment\",\n  \"targetAudience\": \"COURSE\",\n  \"targetId\": \"CS101\",\n  \"assignmentCourseCode\": \"CS101\",\n  \"assignmentDueDate\": \"2027-01-15\",\n  \"assignmentInstructions\": \"Submit your code via the portal\",\n  \"assignmentInstructor\": \"Dr. Smith\"\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Create Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('event_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/event",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "event"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Talk: AI in Education\",\n  \"description\": \"Join us for a discussion on AI in education\",\n  \"type\": \"event\",\n  \"targetAudience\": \"ALL\",\n  \"eventDate\": \"2026-11-20\",\n  \"eventTime\": \"14:00\",\n  \"eventLocation\": \"Auditorium A\",\n  \"eventOrganizer\": \"Computer Science Dept\",\n  \"eventContact\": \"cs@ept.sn\",\n  \"eventFlyer\": \"https://ept.sn/tech-talk.pdf\",\n  \"eventRegistration\": \"https://ept.sn/register\"\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Update Event",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/event/{{event_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "event", "{{event_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Talk: AI in Education (Updated)\",\n  \"description\": \"Join us for a discussion on AI in education - new venue\",\n  \"type\": \"event\",\n  \"eventDate\": \"2026-11-20\",\n  \"eventTime\": \"15:00\",\n  \"eventLocation\": \"Auditorium B\",\n  \"eventOrganizer\": \"Computer Science Dept\",\n  \"eventContact\": \"cs@ept.sn\"\n}"
+            }
+          }
+        },
+        {
+          "name": "7. Create Exam",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('exam_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/exam",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "exam"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Midterm Exam - Algorithms\",\n  \"description\": \"Covers chapters 1-5 of the textbook\",\n  \"type\": \"exam\",\n  \"targetAudience\": \"CLASS\",\n  \"targetId\": \"DIC1-GIT\",\n  \"examCourseCode\": \"CS201\",\n  \"examDate\": \"2026-11-15\",\n  \"examTime\": \"09:00\",\n  \"examLocation\": \"Room 101\",\n  \"examInstructor\": \"Prof. Johnson\",\n  \"examResources\": \"Calculator allowed, closed book\"\n}"
+            }
+          }
+        },
+        {
+          "name": "8. Update Exam",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/exam/{{exam_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "exam", "{{exam_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Midterm Exam - Algorithms (Updated)\",\n  \"description\": \"Covers chapters 1-6 of the textbook\",\n  \"type\": \"exam\",\n  \"examCourseCode\": \"CS201\",\n  \"examDate\": \"2026-11-15\",\n  \"examTime\": \"10:00\",\n  \"examLocation\": \"Room 102\",\n  \"examInstructor\": \"Prof. Johnson\"\n}"
+            }
+          }
+        },
+        {
+          "name": "9. Create Maintenance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('maintenance_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/maintenance",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "maintenance"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"System Maintenance\",\n  \"description\": \"Scheduled maintenance for database upgrade\",\n  \"type\": \"maintenance\",\n  \"targetAudience\": \"ALL\",\n  \"maintenanceStart\": \"2027-12-01T02:00:00\",\n  \"maintenanceEnd\": \"2027-12-01T06:00:00\",\n  \"maintenanceServices\": \"Database upgrade, server patching\",\n  \"maintenanceContact\": \"admin@lms.sn\"\n}"
+            }
+          }
+        },
+        {
+          "name": "10. Update Maintenance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/maintenance/{{maintenance_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "maintenance", "{{maintenance_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"System Maintenance (Updated)\",\n  \"description\": \"Extended maintenance window\",\n  \"type\": \"maintenance\",\n  \"maintenanceStart\": \"2027-12-01T01:00:00\",\n  \"maintenanceEnd\": \"2027-12-01T08:00:00\",\n  \"maintenanceServices\": \"Database upgrade, server patching, security updates\",\n  \"maintenanceContact\": \"admin@lms.sn\"\n}"
+            }
+          }
+        },
+        {
+          "name": "11. Delete Announcement",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/{{announcement_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "{{announcement_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "1. Get Inbox",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/inbox/{{username}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "inbox", "{{username}}"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Sent Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/sent/{{username}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "sent", "{{username}}"]
+            }
+          }
+        },
+        {
+          "name": "3. Count Unread",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/unread/{{username}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "unread", "{{username}}"]
+            }
+          }
+        },
+        {
+          "name": "4. Send Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('message_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "send"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senderUsername\": \"student1\",\n  \"receiverUsername\": \"lecturer1\",\n  \"subject\": \"Question about assignment\",\n  \"body\": \"I have a question about the Java assignment due date.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Mark as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/{{message_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "{{message_id}}", "read"]
+            }
+          }
+        },
+        {
+          "name": "6. Delete by Receiver",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/{{message_id}}/receiver",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "{{message_id}}", "receiver"]
+            }
+          }
+        },
+        {
+          "name": "7. Delete by Sender",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/messages/{{message_id}}/sender",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "messages", "{{message_id}}", "sender"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "1. Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/user/{{userId}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Unread Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/user/{{userId}}/unread",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "user", "{{userId}}", "unread"]
+            }
+          }
+        },
+        {
+          "name": "3. Send Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('notification_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "send"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"student1\",\n  \"title\": \"New Assignment Posted\",\n  \"content\": \"A new Java assignment has been posted. Due date: 2024-12-31\",\n  \"type\": \"COURSE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Mark as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/{{notification_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "{{notification_id}}", "read"]
+            }
+          }
+        },
+        {
+          "name": "5. Mark All as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/user/{{userId}}/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "user", "{{userId}}", "read-all"]
+            }
+          }
+        },
+        {
+          "name": "6. Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/announcement/notifications/{{notification_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "announcement", "notifications", "{{notification_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "API Gateway URL"
+    },
+    {
+      "key": "announcement_url",
+      "value": "http://localhost:8086",
+      "type": "string",
+      "description": "Announcement Service direct URL (no auth required)"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "student1",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "student1",
+      "type": "string"
+    },
+    {
+      "key": "announcement_type",
+      "value": "assignment",
+      "type": "string"
+    },
+    {
+      "key": "assignment_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "event_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "exam_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "maintenance_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "message_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "notification_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "announcement_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "target_audience",
+      "value": "STUDENTS",
+      "type": "string",
+      "description": "Audience cible : ALL | STUDENTS | LECTURERS | COURSE | CLASS"
+    },
+    {
+      "key": "target_course_code",
+      "value": "CS101",
+      "type": "string",
+      "description": "Code du cours cible (utilisé quand target_audience = COURSE)"
+    },
+    {
+      "key": "target_class_id",
+      "value": "DIC1-GIT",
+      "type": "string",
+      "description": "Identifiant de la classe cible (utilisé quand target_audience = CLASS)"
+    }
+  ]
+}

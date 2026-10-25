@@ -1,0 +1,92 @@
+# IDEs
+.idea/
+.vscode/
+.dbg/
+*.swp
+*.swo
+
+# Runtime and local testing
+.local-logs/
+.local-pids
+**/target/
+**/node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+out/
+bin/
+
+# Fichiers uploadés par les utilisateurs (PDFs, etc.)
+uploads/
+
+# AI Context
+PROJECT_CONTEXT.md
+PROJECT_KNOWLEDGE.md
+ADAPTIVE_LEARNING_PLAN.md
+HOW_TO_LOGIN.md
+IMPROVEMENTS.md
+AWS_DEPLOY_PLAN.md
+implementation_plan.md
+task.md
+walkthrough.md
+ai_optimization_plan.md
+nt-lms.txt
+media-service-requirements.txt
+professional_critique.md
+ADAPTIVITE_ETUDIANT.md
+
+# Frontend Design Guide (AI Context)
+FRONTEND_DESIGN_GUIDE.md
+MOBILE_STRATEGY.md
+lms_ept/
+
+# Deployment & Troubleshooting notes
+DEPLOYMENT_NOTES.md
+TROUBLESHOOTING.md
+
+# Production env files (credentials)
+lms-microservices/.env.production
+lms-microservices/.env
+
+# Database dumps (sensitive data)
+*.sql
+*.dump
+*_database_setup.zip
+lmsdb_dump.sql
+lms_database_setup.zip
+!lms-microservices/postgres-init/init.sql
+!lms-microservices/init_practice_exercises.sql
+
+# Internal documentation / AI context (not for public repo)
+LIVEKIT_INTEGRATION_SPEC.md
+DATABASE_SETUP_GUIDE.md
+lms-microservices/DATABASE_SETUP_GUIDE.md
+lms-microservices/ai_optimization_plan.md
+
+notes.txt
+notes_00.txt
+notes_01.txt
+
+# Production Nginx host config (contains domain, cert paths — sensitive)
+nginx-ec2-host.conf*.jks
+*.keystore
+
+nginx-ec2-host.conf

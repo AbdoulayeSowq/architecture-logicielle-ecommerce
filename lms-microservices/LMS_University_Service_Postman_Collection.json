@@ -1,0 +1,691 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "LMS University Service",
+    "description": "Collection exhaustive pour tester tous les endpoints du University Service. Couvre les Cycles, Départements et Classes. Le token admin est automatiquement sauvegardé après le login via le User Service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "1. Login (Admin) — via User Service",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('admin_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin@lms.sn\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cycles",
+      "item": [
+        {
+          "name": "1. List All Cycles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Cycle by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle/{{cycle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle", "{{cycle_id}}"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Cycle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('cycle_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tronc Commun\",\n  \"description\": \"Cycle de 2 ans commun à toutes les filières\",\n  \"durationYears\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Update Cycle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle/{{cycle_id}}/update",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle", "{{cycle_id}}", "update"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tronc Commun (Mise à jour)\",\n  \"description\": \"Cycle commun révisé\",\n  \"durationYears\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Delete Cycle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle/{{cycle_id}}/delete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle", "{{cycle_id}}", "delete"]
+            }
+          }
+        },
+        {
+          "name": "6. List Departments of a Cycle",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle/{{cycle_id}}/departments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle", "{{cycle_id}}", "departments"]
+            }
+          }
+        },
+        {
+          "name": "7. Assign Department to Cycle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/cycle/{{cycle_id}}/department/{{department_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "cycle", "{{cycle_id}}", "department", "{{department_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Départements",
+      "item": [
+        {
+          "name": "1. List All Departments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Department by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('department_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Génie Informatique et Télécommunications\",\n  \"phone\": \"+221338691818\",\n  \"email\": \"git@ept.sn\",\n  \"description\": \"Département GIT — Formation en informatique et télécommunications\",\n  \"headId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Update Department",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/update",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "update"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Génie Informatique et Télécommunications (MAJ)\",\n  \"phone\": \"+221338000001\",\n  \"email\": \"git-updated@ept.sn\",\n  \"description\": \"Département GIT mis à jour\",\n  \"headId\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Delete Department",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/delete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "delete"]
+            }
+          }
+        },
+        {
+          "name": "6. List Unassigned Departments (no Cycle)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/unassigned",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "unassigned"]
+            }
+          }
+        },
+        {
+          "name": "7. Unassign Department from Cycle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/unassign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "unassign"]
+            }
+          }
+        },
+        {
+          "name": "8. Assign Course to Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/course/{{course_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "course", "{{course_id}}"]
+            }
+          }
+        },
+        {
+          "name": "9. Unassign Course from Department",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/course/{{course_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "course", "{{course_id}}"]
+            }
+          }
+        },
+        {
+          "name": "10. List Classes of a Department",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/classes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "classes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "item": [
+        {
+          "name": "1. List All Classes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Class by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class/{{class_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class", "{{class_id}}"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Class",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('class_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TC1-A\",\n  \"description\": \"Classe TC1 groupe A — Tronc commun première année\",\n  \"capacity\": 35,\n  \"academicYear\": \"2024-2025\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Update Class",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class/{{class_id}}/update",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class", "{{class_id}}", "update"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TC1-A (MAJ)\",\n  \"description\": \"Classe TC1 groupe A mise à jour\",\n  \"capacity\": 40,\n  \"academicYear\": \"2024-2025\"\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Delete Class",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class/{{class_id}}/delete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class", "{{class_id}}", "delete"]
+            }
+          }
+        },
+        {
+          "name": "6. List Unassigned Classes (no Department)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class/unassigned",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class", "unassigned"]
+            }
+          }
+        },
+        {
+          "name": "7. Assign Class to Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/department/{{department_id}}/class/{{class_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "department", "{{department_id}}", "class", "{{class_id}}"]
+            }
+          }
+        },
+        {
+          "name": "8. Unassign Class from Department",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/class/{{class_id}}/unassign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "class", "{{class_id}}", "unassign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emplois du temps",
+      "item": [
+        {
+          "name": "1. Créer un emploi du temps",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/timetables",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "timetables"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"classId\": \"DIC1-GIT\",\n  \"startDate\": \"2024-05-13T08:00:00\",\n  \"endDate\": \"2024-05-18T18:00:00\",\n  \"data\": \"{\\\"monday\\\": [], \\\"tuesday\\\": []}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Récupérer le dernier publié (Standardisé)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/timetables/class/DIC1-GIT/latest",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "timetables", "class", "DIC1-GIT", "latest"]
+            }
+          }
+        },
+        {
+          "name": "3. Publier un emploi du temps",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/timetables/1/publish",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "timetables", "1", "publish"]
+            }
+          }
+        },
+        {
+          "name": "4. Liste par Classe",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/uni/timetables/class/DIC1-GIT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "uni", "timetables", "class", "DIC1-GIT"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "URL de l'API Gateway (avec JWT auth)"
+    },
+    {
+      "key": "uni_url",
+      "value": "http://localhost:8082",
+      "type": "string",
+      "description": "URL directe du University Service (sans Gateway)"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cycle_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "department_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "class_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "course_id",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

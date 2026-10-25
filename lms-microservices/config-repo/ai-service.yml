@@ -1,0 +1,46 @@
+# ============================================================
+# CONFIG — ai-service (Groq LLM, Gemini Embeddings, pgvector RAG)
+# Les clés API sont lues depuis les variables d'environnement (.env)
+# ============================================================
+
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: ${AI_DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  # --- Google Gemini (Embeddings pour RAG) ---
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: gemini-1.5-flash
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          embedding:
+            options:
+              model: embedding-001
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: NONE
+        distance-type: COSINE_DISTANCE
+        dimensions: 3072
+
+# --- Groq (LLM principal — llama-3.3-70b) ---
+ai:
+  provider:
+    groq:
+      api-key: ${GROQ_API_KEY}
+      url: https://api.groq.com/openai/v1/chat/completions
+      model: ${GROQ_MODEL:llama-3.3-70b-versatile}

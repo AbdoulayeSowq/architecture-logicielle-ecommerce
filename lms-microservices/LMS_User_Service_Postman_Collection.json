@@ -1,0 +1,580 @@
+{
+  "info": {
+    "_postman_id": "c88f17a9-9a2f-410a-8671-b841a0e1b212",
+    "name": "LMS User Service",
+    "description": "Collection exhaustive pour tester tous les endpoints du User Service. Chaque login sauvegarde un token par rôle (admin_token, student_token, lecturer_token) + le token générique.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification & Profil",
+      "item": [
+        {
+          "name": "1. Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('admin_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin@lms.sn\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Login (Student)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('student_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"dmedoune@ept.sn\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3. Login (Lecturer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('lecturer_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"aaciss@ept.sn\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Get User Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/userInfo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "userInfo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administration - Etudiants",
+      "item": [
+        {
+          "name": "1. Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/students",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "students"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jdoe\",\n  \"email\": \"jdoe@ept.sn\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"fullName\": \"John Doe\",\n  \"phone\": \"+221770000000\",\n  \"dateOfBirth\": \"2000-01-01\",\n  \"gender\": \"Male\",\n  \"joiningDate\": \"2023-09-01\",\n  \"studentId\": 123456,\n  \"enrollmentNumber\": \"EN123456\",\n  \"intake\": \"DIC1\",\n  \"department\": \"GIT\",\n  \"courseId\": 1,\n  \"address\": {\n    \"addressLine1\": \"Dakar\",\n    \"city\": \"Dakar\",\n    \"state\": \"Dakar\",\n    \"country\": \"Senegal\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Get All Students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/students",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "students"]
+            }
+          }
+        },
+        {
+          "name": "3. Update Student Department",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/students/username/jdoe/department?department=GEM",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "students", "username", "jdoe", "department"],
+              "query": [
+                {
+                  "key": "department",
+                  "value": "GEM"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Delete Student",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/students/username/jdoe",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "students", "username", "jdoe"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administration - Professeurs",
+      "item": [
+        {
+          "name": "1. Create Lecturer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/lecturers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "lecturers"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mndione\",\n  \"email\": \"mndione@ept.sn\",\n  \"firstName\": \"Moussa\",\n  \"lastName\": \"Ndione\",\n  \"fullName\": \"Moussa Ndione\",\n  \"phone\": \"+221771112233\",\n  \"dateOfBirth\": \"1980-05-12\",\n  \"gender\": \"Male\",\n  \"joiningDate\": \"2026-04-29T10:00:00\",\n  \"lecturerId\": 987654,\n  \"designation\": \"Professor\",\n  \"department\": \"GIT\",\n  \"address\": {\n    \"addressLine1\": \"Thi\\u00e8s\",\n    \"city\": \"Thi\\u00e8s\",\n    \"state\": \"Thi\\u00e8s\",\n    \"country\": \"Senegal\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Get All Lecturers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/lecturers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "lecturers"]
+            }
+          }
+        },
+        {
+          "name": "3. Delete Lecturer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/lecturers/username/mndione",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "lecturers", "username", "mndione"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administration - Recherche Globale",
+      "item": [
+        {
+          "name": "1. Get User by Username",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/admin/users/username/dmedoune",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "admin", "users", "username", "dmedoune"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Students & Lecturers (Données Personnelles)",
+      "item": [
+        {
+          "name": "1. Get Student by Username",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/student/dmedoune/username",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "student", "dmedoune", "username"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Lecturer by Username",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/lecturer/aaciss/username",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "lecturer", "aaciss", "username"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gamification & Mentorship",
+      "item": [
+        {
+          "name": "1. Get Gamification Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/dmedoune",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "dmedoune"]
+            }
+          }
+        },
+        {
+          "name": "2. Add XP to User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/dmedoune/xp?amount=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "dmedoune", "xp"],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Register Daily Login (Streak)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/dmedoune/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "dmedoune", "login"]
+            }
+          }
+        },
+        {
+          "name": "4. Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/leaderboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "leaderboard"]
+            }
+          }
+        },
+        {
+          "name": "5. [Student] Request Mentorship",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/request",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "request"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"menteeUsername\": \"dmedoune\",\n  \"mentorUsername\": \"aaciss\",\n  \"moduleId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "6. [Student] List My Mentorship Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/mentee/dmedoune",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "mentee", "dmedoune"]
+            }
+          }
+        },
+        {
+          "name": "7. [Lecturer] List Mentorship Requests To Review",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/mentor/aaciss",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "mentor", "aaciss"]
+            }
+          }
+        },
+        {
+          "name": "8. [Lecturer] Accept Mentorship (id=2)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/2/status?status=ACCEPTED",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "2", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ACCEPTED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "9. [Lecturer] Reject Mentorship (id=2)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{lecturer_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/2/status?status=REJECTED",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "2", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "REJECTED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "10. [Student] Cancel My Mentorship (id=2)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{student_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/gamification/mentorship/2/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "gamification", "mentorship", "2", "cancel"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "student_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lecturer_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

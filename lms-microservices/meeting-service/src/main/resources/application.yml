@@ -1,0 +1,35 @@
+# meeting-service — Configuration minimale locale
+# Config centralisée dans config-repo/meeting-service.yml
+
+spring:
+  application:
+    name: meeting-service
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+# --- Fallback local ---
+server:
+  port: 8087
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+spring.datasource:
+  url: ${MEETING_DB_URL:jdbc:postgresql://localhost:5432/meeting_db}
+  username: ${DB_USERNAME:macbookpro}
+  password: ${DB_PASSWORD:password}
+
+spring.jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: false
+
+# LiveKit Configuration
+livekit:
+  api:
+    key: ${LIVEKIT_API_KEY:devkey}
+    secret: ${LIVEKIT_API_SECRET:devsecret123456789012345678901234567890}
+  server:
+    url: ${LIVEKIT_SERVER_URL:ws://localhost:7880}

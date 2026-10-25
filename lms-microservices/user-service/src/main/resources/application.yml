@@ -1,0 +1,30 @@
+# user-service — Configuration minimale locale
+# Toute la configuration est centralisée dans config-repo/user-service.yml
+# via Spring Cloud Config Server (http://localhost:8888)
+#
+# Les valeurs sensibles (DB, JWT) sont dans lms-microservices/.env
+# qui est chargé automatiquement par run-local.sh
+
+spring:
+  application:
+    name: user-service
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+# --- Fallback minimal (si config-server indisponible) ---
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+spring.datasource:
+  url: ${DB_URL}
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:86400000}

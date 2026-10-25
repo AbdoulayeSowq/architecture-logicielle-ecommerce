@@ -1,0 +1,10 @@
+target
+.git
+.gitignore
+*.md
+.local-logs
+.local-pids
+*.log
+.env
+.idea
+*.iml

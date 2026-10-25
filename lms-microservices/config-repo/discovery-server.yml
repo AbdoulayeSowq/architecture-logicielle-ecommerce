@@ -1,0 +1,21 @@
+# ============================================================
+# CONFIG — discovery-server (Eureka Registry)
+# ============================================================
+
+server:
+  port: 8761
+
+# Eureka server ne se registre pas lui-même
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+# Pas de DB pour le discovery-server
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration

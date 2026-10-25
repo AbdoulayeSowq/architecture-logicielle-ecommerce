@@ -1,0 +1,42 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  profiles:
+    active: native # Lit depuis le filesystem local (pas Git)
+
+  cloud:
+    config:
+      server:
+        native:
+          # Chemin vers config-repo/ relatif au dossier d'exécution du service
+          # En dev: config-server est lancé depuis lms-microservices/config-server/
+          # donc ../config-repo pointe vers lms-microservices/config-repo/
+          # Priorité 1: variable d'env CONFIG_REPO_PATH (chemin absolu recommandé en prod)
+          # Priorité 2: chemin relatif depuis le répertoire lms-microservices/ (run-local.sh)
+          # Priorité 3: classpath fallback
+          search-locations:
+            - "file:${CONFIG_REPO_PATH:}"
+            - "file:./config-repo"
+            - "file:./lms-microservices/config-repo"
+            - "file:../config-repo"
+            - "classpath:/config-repo"
+
+# Actuator — exposer /actuator/health pour les health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, env
+  endpoint:
+    health:
+      show-details: always
+
+# ⚠️ Le config-server ne s'enregistre PAS dans Eureka
+# pour éviter la dépendance circulaire : discovery-server → config-server → discovery-server
+eureka:
+  client:
+    enabled: false

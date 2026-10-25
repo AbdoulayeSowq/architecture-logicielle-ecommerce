@@ -1,0 +1,30 @@
+# ai-service — Configuration minimale locale
+# Config centralisée dans config-repo/ai-service.yml
+# Valeurs sensibles (GROQ_API_KEY, GEMINI_API_KEY, DB) dans lms-microservices/.env
+
+spring:
+  application:
+    name: ai-service
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+# --- Fallback minimal ---
+server:
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+spring.datasource:
+  url: ${DB_URL}
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+
+ai:
+  provider:
+    groq:
+      api-key: ${GROQ_API_KEY}
+      url: https://api.groq.com/openai/v1/chat/completions
+      model: ${GROQ_MODEL:llama-3.3-70b-versatile}

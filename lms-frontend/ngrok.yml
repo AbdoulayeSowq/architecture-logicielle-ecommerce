@@ -1,0 +1,8 @@
+authtoken: YOUR_AUTH_TOKEN_IF_YOU_HAVE_ONE
+tunnels:
+  frontend:
+    proto: http
+    addr: 3000
+  api:
+    proto: http
+    addr: 8080
